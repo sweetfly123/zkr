@@ -1,0 +1,60 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qy.wenlv.mapper.LFMapper">
+    <resultMap id="result_service" type="com.qy.wenlv.entity.LFEntity">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="userId" property="userId"/>
+        <result column="serveType" property="serveType"/>
+        <result column="resourceType" property="resourceType"/>
+        <result column="productType" property="productType"/>
+        <result column="summary" property="summary"/>
+        <result column="postHits" property="postHits"/>
+        <result column="thumbnail" property="thumbnail"/>
+        <result column="province" property="province"/>
+        <result column="cities" property="cities"/>
+        <result column="corpId" property="corpId"/>
+        <result column="status" property="status"/>
+        <result column="recommend" property="recommend"/>
+        <result column="coCount" property="coCount"/>
+        <result column="cname" property="cName"/>
+        <result column="logo" property="logo"/>
+        <result column="uname" property="uName"/>
+        <result column="cStatus" property="cStatus"/>
+        <result column="iStatus" property="iStatus"/>
+        <result column="iId" property="iId"/>
+        <result column="lfUrl" property="lfUrl"/>
+    </resultMap>
+    <sql id="lfAlias">
+        id            as id,
+       name          as name,
+       user_id       as userId,
+       serve_type    as serveType,
+       resource_type as resourceType,
+       product_type  as productType,
+       summary       as summary,
+       post_hits     as postHits,
+       thumbnail     as thumbnail,
+       province      as province,
+       cities        as cities,
+       corp_id       as corpId,
+       status        as status,
+       recommend     as recommend,
+       co_count      as coCount,
+       cname         as cName,
+       logo          as logo,
+       uname         as uName,
+       cstatus       as cStatus,
+       istatus       as iStatus,
+       iid           as iId,
+       lfurl         as lfUrl
+    </sql>
+    <select id="listLfService" resultMap="result_service">
+        select
+        <include refid="lfAlias"/>
+        from lv_service
+    </select>
+
+</mapper>  
