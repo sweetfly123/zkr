@@ -23,12 +23,12 @@ import java.util.List;
 @RestController
 @Api(tags = "文件上传")
 @RequestMapping("/api")
-public class ArticleController {
+public class FileController {
 
     @Autowired
     public FileUtils fileUtils;
 
-    @ApiOperation("上传附件")
+    @ApiOperation("上传多个附件")
     @PostMapping(value = "/uploadFile", headers = "Content-Type=multipart/form-data")
     public DefaultResult uploadFile(@RequestParam("file") @ApiParam(value = "二进制文件流") MultipartFile[] files) {
         /*****************************/
@@ -38,6 +38,16 @@ public class ArticleController {
         for (MultipartFile file : files) {
             msg = fileUtils.uploadFile(file);
         }
+        return DefaultResult.success(msg);
+    }
+
+    @ApiOperation("上传单个文件")
+    @PostMapping(value = "/uploadSingleFile")
+    public DefaultResult uploadSingleFile(@RequestParam("file") @ApiParam(value = "二进制文件流") MultipartFile file) {
+        /*****************************/
+        //业务层加入校验代码
+        /*****************************/
+        String msg = fileUtils.uploadFile(file);
         return DefaultResult.success(msg);
     }
 }
