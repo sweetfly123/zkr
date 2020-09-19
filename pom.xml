@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.qy</groupId>
-    <artifactId>wenlv</artifactId>
+    <artifactId>zkr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>wenlv</name>
     <description>Demo project for Spring Boot</description>
