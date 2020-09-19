@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Barret
@@ -85,5 +86,35 @@ public class FileUtils {
             upload.mkdirs();
         }
         return upload.getAbsolutePath();
+    }
+
+    /**
+     * 读取目录下的所有文件
+     *
+     * @param fileNames 保存文件名的集合
+     * @return
+     */
+    public void findFileList(List<String> fileNames) {
+        File dir = new File(filePath);
+        // 判断是否存在目录
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+        // 读取目录下的所有目录文件信息
+        String[] files = dir.list();
+        // 循环，添加文件名或回调自身
+        for (int i = 0; i < files.length; i++) {
+            File file = new File(dir, files[i]);
+            // 如果文件
+            if (file.isFile()) {
+                // 添加文件全路径名
+                fileNames.add(dir + "\\" + file.getName());
+            }
+            // 如果是目录
+           /* else {
+                // 回调自身继续查询
+                findFileList(fileNames);
+            }*/
+        }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,4 +51,13 @@ public class FileController {
         String msg = fileUtils.uploadFile(file);
         return DefaultResult.success(msg);
     }
+
+    @ApiOperation("查看路径下的所有文件")
+    @GetMapping(value = "/list/file")
+    public DefaultResult getFileList() {
+        List<String> fileNames = new ArrayList<>();
+        fileUtils.findFileList(fileNames);
+        return DefaultResult.success(fileNames);
+    }
+
 }
