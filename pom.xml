@@ -11,7 +11,7 @@
     <groupId>com.qy</groupId>
     <artifactId>zkr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wenlv</name>
+    <name>zkr</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
