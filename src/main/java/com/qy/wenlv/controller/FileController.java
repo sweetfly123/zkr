@@ -6,15 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +18,7 @@ import java.util.List;
 @RestController
 @Api(tags = "文件上传")
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class FileController {
 
     @Autowired
