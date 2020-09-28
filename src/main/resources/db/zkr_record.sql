@@ -1,3 +1,4 @@
+drop table record;
 create table record
 (
     id               int auto_increment
@@ -12,6 +13,8 @@ create table record
     file_size        varchar(32)       null comment '文件大小，单位KB',
     file_format      varchar(32)       null,
     status           varchar(32)       null,
-    detail           varchar(4096)     null
+    detail           varchar(4096)     null,
+    gmt_create_time datetime default CURRENT_TIMESTAMP,
+    gmt_update_time datetime
 );
 

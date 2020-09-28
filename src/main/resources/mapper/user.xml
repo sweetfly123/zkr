@@ -9,9 +9,10 @@
         <result column="password" property="password"/>
         <result column="enabled" property="enabled"/>
         <result column="locked" property="locked"/>
+        <result column="organization_id" property="organizationId"/>
     </resultMap>
     <select id="loadUserByUsername" resultMap="result_user">
-        SELECT id,username,password,enabled,locked FROM user u where u.username = #{username}
+        SELECT id,username,password,enabled,locked,organization_id FROM user u where u.username = #{username}
     </select>
 
     <select id="getUserRolesByUserId" parameterType="java.lang.Integer" resultType="com.qy.wenlv.entity.Role">

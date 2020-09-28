@@ -22,6 +22,8 @@ public class MyUser implements UserDetails {
     private Boolean enabled;
     private Boolean locked;
     private List<Role> roles;
+    private Integer organizationId;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -93,4 +95,11 @@ public class MyUser implements UserDetails {
         this.roles = roles;
     }
 
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
+    }
 }

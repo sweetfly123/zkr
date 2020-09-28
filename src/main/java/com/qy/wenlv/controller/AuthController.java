@@ -50,14 +50,7 @@ public class AuthController {
      * @description 用户登录
      */
     @ApiOperation("登录-获取token")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(paramType = "query", dataType = "String",
-                            name = "username", value = "用户名", required = true),
-                    @ApiImplicitParam(paramType = "query", dataType = "String",
-                            name = "password", value = "密码", required = true)
-            }
-    )
+
     @PostMapping("user/login")
     public ResponseVO login(LoginUserDTO loginUserDTO) {
         return userService.login(loginUserDTO);
@@ -96,6 +89,4 @@ public class AuthController {
         List<Role> roles = roleMapper.selectByMap(null);
         return ResponseVO.success(roles);
     }
-
-
 }

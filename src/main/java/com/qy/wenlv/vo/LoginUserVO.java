@@ -22,19 +22,14 @@ public class LoginUserVO {
     private Integer id;
 
     /**
-     * 用户账号
-     */
-    private String account;
-
-    /**
      * 用户名
      */
     private String name;
 
     /**
-     * 用户密码
+     * 机构名称
      */
-    private String password;
+    private String organization;
 
     /**
      * accessToken码
@@ -59,18 +54,12 @@ public class LoginUserVO {
     /**
      * 使用范围
      */
-    private List<String> scope;
+    private String scope;
 
     /**
      * token类型
      */
     private String tokenType;
-
-    /**
-     * refreshToken到期时间
-     */
-    private String refreshTokenExpiration;
-
 
     /**
      * refreshToken码

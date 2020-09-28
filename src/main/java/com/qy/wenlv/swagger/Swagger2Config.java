@@ -1,5 +1,6 @@
-package com.qy.wenlv.config;
+package com.qy.wenlv.swagger;
 
+import com.google.common.collect.Ordering;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,11 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -82,7 +79,22 @@ public class Swagger2Config {
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+                .securityContexts(securityContexts())
+                .apiDescriptionOrdering(
+                        new Ordering<ApiDescription>() {
+                            @Override
+                            public int compare(ApiDescription left, ApiDescription right) {
+                                int leftPos = left.getOperations().size() == 1 ? left.getOperations().get(0).getPosition() : 0;
+                                int rightPos = right.getOperations().size() == 1 ? right.getOperations().get(0).getPosition() : 0;
+                                int position = Integer.compare(leftPos, rightPos);
+                                if (position == 0) {
+                                    position = left.getPath().compareTo(right.getPath());
+                                }
+
+                                return position;
+                            }
+                        }
+                );
     }
 
     private ApiInfo apiInfo() {

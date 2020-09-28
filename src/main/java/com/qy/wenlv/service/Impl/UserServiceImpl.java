@@ -8,9 +8,11 @@ import com.qy.wenlv.domain.Token;
 import com.qy.wenlv.domain.bean.RefreshTokenBean;
 import com.qy.wenlv.dto.LoginUserDTO;
 import com.qy.wenlv.dto.UserDTO;
+import com.qy.wenlv.entity.Organization;
 import com.qy.wenlv.entity.Role;
 import com.qy.wenlv.enums.ResponseEnum;
 import com.qy.wenlv.enums.UrlEnum;
+import com.qy.wenlv.mapper.OrganizationMapper;
 import com.qy.wenlv.mapper.RoleMapper;
 import com.qy.wenlv.mapper.UserMapper;
 import com.qy.wenlv.security.MyUser;
@@ -52,6 +54,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, MyUser> implements 
 
     @Autowired
     private RedisUtil redisUtil;
+
+    @Autowired
+    private OrganizationMapper organizationMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -119,23 +124,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, MyUser> implements 
         paramMap.add("username", loginUserDTO.getUsername());
         paramMap.add("password", loginUserDTO.getPassword());
         paramMap.add("grant_type", GRANT_TYPE[0]);
-        Token token = new Token();
+        Token token = null;
         try {
             //因为oauth2本身自带的登录接口是"/oauth/token"，并且返回的数据类型不能按我们想要的去返回
             //但是我的业务需求是，登录接口是"user/login"，由于我没研究过要怎么去修改oauth2内部的endpoint配置
             //所以这里我用restTemplate(HTTP客户端)进行一次转发到oauth2内部的登录接口，比较简单粗暴
-            Object o = restTemplate.postForObject(serverConfig.getUrl() + UrlEnum.LOGIN_URL.getUrl(), paramMap, Object.class);
-            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(o));
-            token.setTokenType(jsonObject.getString("token_type"));
-            token.setValue(jsonObject.getString("access_token"));
-            RefreshTokenBean refreshTokenBean = new RefreshTokenBean();
-            refreshTokenBean.setValue(jsonObject.getString("refresh_token"));
-            refreshTokenBean.setExpiration(jsonObject.getString("expires_in"));
-            token.setRefreshToken(refreshTokenBean);
-            token.setExpiresIn((Integer) jsonObject.get("expires_in"));
-            token.setScope(Arrays.asList(jsonObject.getString("scope")));
+            token = restTemplate.postForObject(serverConfig.getUrl() + UrlEnum.LOGIN_URL.getUrl(), paramMap, Token.class);
 
-            LoginUserVO loginUserVO = redisUtil.get(token.getValue(), LoginUserVO.class);
+            LoginUserVO loginUserVO = redisUtil.get(token.getAccess_token(), LoginUserVO.class);
             if (loginUserVO != null) {
                 //登录的时候，判断该用户是否已经登录过了
                 //如果redis里面已经存在该用户已经登录过了的信息
@@ -156,16 +152,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, MyUser> implements 
         //这里我拿到了登录成功后返回的token信息之后，我再进行一层封装，最后返回给前端的其实是LoginUserVO
         LoginUserVO loginUserVO = new LoginUserVO();
         MyUser userPO = (MyUser) userMapper.loadUserByUsername(loginUserDTO.getUsername());
+        Organization organization = organizationMapper.selectById(userPO.getOrganizationId());
 //        BeanUtils.copyPropertiesIgnoreNull(userPO, loginUserVO);
-        loginUserVO.setPassword(userPO.getPassword());
-        loginUserVO.setAccessToken(token.getValue());
-        loginUserVO.setAccessTokenExpiresIn(token.getExpiresIn());
+        loginUserVO.setOrganization(organization.getName());
+        loginUserVO.setAccessToken(token.getAccess_token());
+        loginUserVO.setAccessTokenExpiresIn(token.getExpires_in());
         loginUserVO.setAccessTokenExpiration(token.getExpiration());
         loginUserVO.setExpired(token.isExpired());
         loginUserVO.setScope(token.getScope());
-        loginUserVO.setTokenType(token.getTokenType());
-        loginUserVO.setRefreshToken(token.getRefreshToken().getValue());
-        loginUserVO.setRefreshTokenExpiration(token.getRefreshToken().getExpiration());
+        loginUserVO.setTokenType(token.getToken_type());
+        loginUserVO.setRefreshToken(token.getRefresh_token());
+        loginUserVO.setId(userPO.getId());
+        loginUserVO.setName(userPO.getUsername());
         //存储登录的用户
         redisUtil.set(loginUserVO.getAccessToken(), loginUserVO, TimeUnit.HOURS.toSeconds(1));
         return ResponseVO.success(loginUserVO);
